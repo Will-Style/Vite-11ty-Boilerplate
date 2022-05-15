@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.title }}</title>
+    {# Build時は ./dist/ 内のCSSとJSを参照する #}
+    {% if build.env === "production" %}
+    <link rel="stylesheet" type="text/css" href="{{ config.path }}{{ build.dest }}/css/styles.css"/>
+    <script src="{{ config.path }}{{ build.dest }}/js/main.js" defer></script>
+    {% else %}
+    {# 開発時は ./src/ 内のJSを参照するCSSはimportしているので呼び出す必要はない #}
+    <script type="module" src="/{{ build.dest }}/js/app.js"></script>
+    {% endif %}
+</head>
+{% if build.barba %}
+<body data-barba="wrapper">
+    <div data-barba="container">
+{% else %}
+<body>
+{% endif %}
+
+{% include 'header.njk' %}
+
+{{ content | safe }}
+
+{% include 'footer.njk' %}
+
+{% if build.barba %}
+    </div>
+{% endif %}
+</body>
+</html>
